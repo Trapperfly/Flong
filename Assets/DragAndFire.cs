@@ -14,8 +14,14 @@ public class DragAndFire : MonoBehaviour
     Vector2 mousePos;
     Vector2 worldMousePos;
     public float forceMultiplier;
-    bool grounded;
+    bool available = false;
+    public bool grounded;
+    public bool airial;
+    public int doubleJumps = 0;
+    public int aDoubleJumps = 0;
+    public bool wallJumps;
     public LayerMask playerLayerMask;
+    public LayerMask floorLayerMask;
     bool hitPlayer;
     public float tracePointDistance = 0.05f;
     public CameraTracker tracker;
@@ -34,17 +40,26 @@ public class DragAndFire : MonoBehaviour
     {
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetMouseButtonDown(0)) { holding = true; OnClick(); }
-        //if (!hitPlayer) { holding = false; return; }
-        if ( grounded && holding )
+        if (Input.GetMouseButtonDown(0)) { 
+            holding = true;
+        }
+        available = (grounded && holding) || (airial && aDoubleJumps > 0 && holding);
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (available)
+                OnClick();
+        }
+            //if (!hitPlayer) { holding = false; return; }
+        if (available)
         {
             Drag();
             if (force > maxForce * 0.1f) force = maxForce * 0.1f;
             CalculateTrajectory();
         }
-        if ( grounded && holding && Input.GetMouseButtonUp(0)) 
+        if ( available && Input.GetMouseButtonUp(0) ) 
         {
             Launch();
+            if (airial) { aDoubleJumps--; }
             holding = false;
             //hitPlayer = false;
         }
@@ -52,16 +67,41 @@ public class DragAndFire : MonoBehaviour
             holding = false;
             //hitPlayer = false;
         }
+        GroundCheck();
         //grounded = false;
     }
-
-    private void OnCollisionStay2D(Collision2D collision)
+    void GroundCheck()
     {
-        if (collision.collider.CompareTag("Floor"))
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 0.3f, floorLayerMask);
+        if (hits.Length > 0)
         {
             grounded = true;
+            airial = false;
+            aDoubleJumps = doubleJumps;
+        }
+        else
+        {
+            grounded = false;
+            airial = true;
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.CompareTag("Floor"))
+        {
+            if (wallJumps)
+                aDoubleJumps++;
+        }
+    }
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.collider.CompareTag("Floor"))
+    //    {
+    //        if (!airial)
+    //        grounded = true;
+    //        airial = false;
+    //    }
+    //}
 
     void OnClick()
     {

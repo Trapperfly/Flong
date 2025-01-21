@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 108351056}
   - component: {fileID: 108351055}
   - component: {fileID: 108351054}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (6)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 179288640}
   - component: {fileID: 179288639}
   - component: {fileID: 179288638}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (8)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 264716083}
   - component: {fileID: 264716082}
   - component: {fileID: 264716081}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -786,7 +786,7 @@ GameObject:
   - component: {fileID: 665618703}
   - component: {fileID: 665618702}
   - component: {fileID: 665618701}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (5)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -920,7 +920,7 @@ GameObject:
   - component: {fileID: 676652821}
   - component: {fileID: 676652820}
   - component: {fileID: 676652819}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (15)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -1054,7 +1054,7 @@ GameObject:
   - component: {fileID: 789444895}
   - component: {fileID: 789444894}
   - component: {fileID: 789444893}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (12)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -1188,7 +1188,7 @@ GameObject:
   - component: {fileID: 948171153}
   - component: {fileID: 948171152}
   - component: {fileID: 948171151}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (13)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -1358,7 +1358,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!61 &998373466
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1419,9 +1419,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxForce: 5
   forceMultiplier: 50
+  grounded: 0
+  airial: 0
+  doubleJumps: 1
+  aDoubleJumps: 0
+  wallJumps: 1
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
   tracePointDistance: 0.05
   tracker: {fileID: 2136758734}
   dragVisuals: {fileID: 4407212464999014216, guid: 834463c01ca5dfc4eba4b36affcab9de, type: 3}
@@ -1632,7 +1640,7 @@ GameObject:
   - component: {fileID: 1049777907}
   - component: {fileID: 1049777906}
   - component: {fileID: 1049777905}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (1)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -1861,7 +1869,7 @@ GameObject:
   - component: {fileID: 1341759984}
   - component: {fileID: 1341759983}
   - component: {fileID: 1341759982}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (10)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -1995,7 +2003,7 @@ GameObject:
   - component: {fileID: 1344643481}
   - component: {fileID: 1344643480}
   - component: {fileID: 1344643479}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (4)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2129,7 +2137,7 @@ GameObject:
   - component: {fileID: 1360953342}
   - component: {fileID: 1360953341}
   - component: {fileID: 1360953340}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (3)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2263,7 +2271,7 @@ GameObject:
   - component: {fileID: 1750152736}
   - component: {fileID: 1750152735}
   - component: {fileID: 1750152734}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (9)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2397,7 +2405,7 @@ GameObject:
   - component: {fileID: 1850369050}
   - component: {fileID: 1850369049}
   - component: {fileID: 1850369048}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (14)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2531,7 +2539,7 @@ GameObject:
   - component: {fileID: 1915623782}
   - component: {fileID: 1915623781}
   - component: {fileID: 1915623780}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (11)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2665,7 +2673,7 @@ GameObject:
   - component: {fileID: 1930315418}
   - component: {fileID: 1930315417}
   - component: {fileID: 1930315416}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (7)
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -2799,7 +2807,7 @@ GameObject:
   - component: {fileID: 2100642998}
   - component: {fileID: 2100642997}
   - component: {fileID: 2100642996}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor (2)
   m_TagString: Floor
   m_Icon: {fileID: 0}
