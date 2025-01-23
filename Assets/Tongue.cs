@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Tongue : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Tongue : MonoBehaviour
     float i;
     public Transform carried;
     public Transform placing;
+    public ShadowCaster2D sc;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,9 +30,14 @@ public class Tongue : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance, LayerMask);
             if (hit)
             {
-                hitPoint = hit.point;
+                
                 if (hit.transform.gameObject.layer != 7) // floor
+                {
                     carried = hit.transform;
+                    hitPoint = hit.transform.position;
+                }
+                else
+                  hitPoint = hit.point;
             }
             else
             {
@@ -46,6 +53,7 @@ public class Tongue : MonoBehaviour
         anim = true;
         if (transform.childCount > 0)
         {
+            sc.castingOption = ShadowCaster2D.ShadowCastingOptions.CastShadow;
             placing = transform.GetChild(0);
             transform.GetChild(0).SetParent(null);
         }
@@ -70,6 +78,7 @@ public class Tongue : MonoBehaviour
         }
         if (carried)
         {
+            sc.castingOption = ShadowCaster2D.ShadowCastingOptions.NoShadow;
             carried.SetParent(transform);
             carried.localPosition = Vector3.zero;
             carried.GetComponent<Collider2D>().enabled = false;

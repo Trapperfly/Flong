@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ public class DragAndFire : MonoBehaviour
     public GameObject dragVisuals;
     GameObject iDragVisuals;
     Transform iThumb;
+    public CinemachineCamera cam;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -136,6 +138,7 @@ public class DragAndFire : MonoBehaviour
         force = Vector2.Distance(mousePos, clickPos);
         direction = -(mousePos - clickPos).normalized;
         iThumb.position = new Vector3(worldMousePos.x, worldMousePos.y, 0);
+        cam.Lens.OrthographicSize = Mathf.Lerp(5, 10, force / maxForce);
     }
     void CalculateTrajectory()
     {
@@ -150,6 +153,7 @@ public class DragAndFire : MonoBehaviour
 
     void Launch()
     {
+        lr.enabled = false;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);
         grounded = false;
