@@ -30,6 +30,64 @@ public class DragAndFire : MonoBehaviour
     GameObject iDragVisuals;
     Transform iThumb;
     public CinemachineCamera cam;
+
+    bool prediction = false;
+    bool doubleJump = false;
+    bool thick = false;
+    bool upsideDown = false;
+    bool teleport = false;
+    bool sticky = false;
+    bool longEyes = false;
+
+    public FireflyType fireflyType;
+
+    public void ActivateEffect(FireflyType type)
+    {
+        switch (type)
+        {
+            case FireflyType.None:
+                prediction = false;
+                doubleJump = false;
+                doubleJumps = 0;
+                thick = false;
+                rb.mass = 1;
+                upsideDown = false;
+                rb.gravityScale = 1f;
+                teleport = false;
+                sticky = false;
+                
+                longEyes = false;
+                tracker.adjust = 0.1f;
+                break;
+            case FireflyType.Prediction:
+                prediction = true;
+                break;
+            case FireflyType.DoubleJump:
+                doubleJump = true;
+                doubleJumps = 1;
+                break;
+            case FireflyType.Thick:
+                thick = true;
+                rb.mass = 2;
+                rb.gravityScale = 2;
+                break;
+            case FireflyType.UpsideDown:
+                upsideDown =true;
+                rb.gravityScale = -1f;
+                break;
+            case FireflyType.Teleport:
+                teleport = true;
+                break;
+            case FireflyType.Sticky:
+                sticky = true;
+                break;
+            case FireflyType.LongEyes:
+                tracker.adjust = 0.5f;
+                break;
+            default:
+                break;
+        }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -60,7 +118,8 @@ public class DragAndFire : MonoBehaviour
         }
         if ( available && Input.GetMouseButtonUp(0) ) 
         {
-            Launch();
+            if (teleport) Teleport();
+            else Launch();
             if (airial) { aDoubleJumps--; }
             holding = false;
             //hitPlayer = false;
@@ -71,6 +130,7 @@ public class DragAndFire : MonoBehaviour
         }
         GroundCheck();
         //grounded = false;
+        if (!holding) { cam.Lens.OrthographicSize = Mathf.Lerp(cam.Lens.OrthographicSize, 5, 0.02f); }
     }
     void GroundCheck()
     {
@@ -91,8 +151,13 @@ public class DragAndFire : MonoBehaviour
     {
         if (collision.collider.gameObject.CompareTag("Floor"))
         {
-            if (wallJumps)
+            if (sticky)
+            {
+                rb.gravityScale = 0;
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0;
                 aDoubleJumps++;
+            }
         }
     }
     //private void OnCollisionStay2D(Collision2D collision)
@@ -142,6 +207,7 @@ public class DragAndFire : MonoBehaviour
     }
     void CalculateTrajectory()
     {
+        if (!prediction) return;
         lr.enabled = true;
         for (int i = 0; i < lr.positionCount; i++)
         {
@@ -150,9 +216,21 @@ public class DragAndFire : MonoBehaviour
             lr.SetPosition(i, posWithGrav);
         }
     }
-
+    void Teleport()
+    {
+        lr.enabled = false;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 200, floorLayerMask);
+        if (hit)
+        {
+            transform.position = hit.point;
+            grounded = false;
+        }
+        tracker.locked = false;
+        Destroy(iDragVisuals);
+    }
     void Launch()
     {
+        if (sticky) rb.gravityScale = 1;
         lr.enabled = false;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);

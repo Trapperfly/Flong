@@ -14,6 +14,7 @@ public class Tongue : MonoBehaviour
     public Transform carried;
     public Transform placing;
     public ShadowCaster2D sc;
+    public DragAndFire dnf;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -67,6 +68,8 @@ public class Tongue : MonoBehaviour
         }
         if (placing) { 
             placing.GetComponent<Collider2D>().enabled = true; 
+            dnf.fireflyType = FireflyType.None;
+            dnf.ActivateEffect(dnf.fireflyType);
             placing = null;
         }
         while (i > 0)
@@ -82,6 +85,8 @@ public class Tongue : MonoBehaviour
             carried.SetParent(transform);
             carried.localPosition = Vector3.zero;
             carried.GetComponent<Collider2D>().enabled = false;
+            dnf.fireflyType = carried.GetComponent<Firefly>().FireflyType;
+            dnf.ActivateEffect(dnf.fireflyType);
         }
         anim = false;
         carried = null;
