@@ -15,6 +15,8 @@ public class Tongue : MonoBehaviour
     public Transform placing;
     public ShadowCaster2D sc;
     public DragAndFire dnf;
+
+    public Vector2 storedScale;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -51,42 +53,107 @@ public class Tongue : MonoBehaviour
     }
     IEnumerator TongueAnim()
     {
+        Transform rbObject = null;
         anim = true;
         if (transform.childCount > 0)
         {
             sc.castingOption = ShadowCaster2D.ShadowCastingOptions.CastShadow;
             placing = transform.GetChild(0);
             transform.GetChild(0).SetParent(null);
+            placing.TryGetComponent(out Rigidbody2D rb);
+            if (rb != null)
+            {
+                //rb.TryGetComponent(out SpriteRenderer renderer);
+                //renderer.enabled = true;
+                rb.simulated = true;
+                rbObject = placing;
+                placing.TryGetComponent(out ShadowCaster2D sco);
+                if (sco != null)
+                {
+                    sco.castingOption = ShadowCaster2D.ShadowCastingOptions.CastShadow;
+                }
+                placing.TryGetComponent(out Collider2D col);
+                if (col != null)
+                {
+                    col.enabled = true;
+                }
+            }
+            
         }
         yield return null;
         while (i < time)
         {
             i += Time.deltaTime;
+            if (rbObject != null) { rbObject.localScale = Vector2.Lerp(Vector2.zero, storedScale, i / time); }
             lr.SetPosition(1, Vector2.Lerp(transform.position, hitPoint, i / time));
             if (placing) placing.position = lr.GetPosition(1);
             yield return null;
         }
         if (placing) { 
-            placing.GetComponent<Collider2D>().enabled = true; 
-            dnf.fireflyType = FireflyType.None;
-            dnf.ActivateEffect(dnf.fireflyType);
+            placing.GetComponent<Collider2D>().enabled = true;
+            placing.TryGetComponent(out Firefly firefly);
+            if (firefly != null)
+            {
+                dnf.fireflyType = FireflyType.None;
+                dnf.ActivateEffect(dnf.fireflyType);
+            }
+            
             placing = null;
+            rbObject = null;
+
+        }
+        
+        if (carried)
+        {
+            carried.TryGetComponent(out Rigidbody2D rb);
+            if (rb != null)
+            {
+                //rb.TryGetComponent(out SpriteRenderer renderer);
+                //renderer.enabled = true;
+                rb.simulated = true;
+                rbObject = carried;
+                storedScale = rbObject.transform.localScale;
+                carried.TryGetComponent(out Collider2D col);
+                if (col != null)
+                {
+                    col.enabled = false;
+                }
+            }
         }
         while (i > 0)
         {
             i -= Time.deltaTime;
+            if (rbObject != null) { rbObject.localScale = Vector2.Lerp(Vector2.zero, storedScale, i / time); }
             lr.SetPosition(1, Vector2.Lerp(transform.position, hitPoint, i / time));
             if (carried) carried.position = lr.GetPosition(1);
             yield return null;
         }
         if (carried)
         {
-            sc.castingOption = ShadowCaster2D.ShadowCastingOptions.NoShadow;
+            if (rbObject == null)
+                sc.castingOption = ShadowCaster2D.ShadowCastingOptions.NoShadow;
             carried.SetParent(transform);
             carried.localPosition = Vector3.zero;
             carried.GetComponent<Collider2D>().enabled = false;
-            dnf.fireflyType = carried.GetComponent<Firefly>().FireflyType;
-            dnf.ActivateEffect(dnf.fireflyType);
+            carried.TryGetComponent(out Firefly firefly);
+            if (firefly != null)
+            {
+                dnf.fireflyType = firefly.fireflyType;
+                dnf.ActivateEffect(dnf.fireflyType);
+            }
+            carried.TryGetComponent(out Rigidbody2D rb);
+            if (rb != null)
+            {
+                rb.simulated = false;
+                //rb.TryGetComponent(out SpriteRenderer renderer);
+                //renderer.enabled = false;
+                carried.TryGetComponent(out ShadowCaster2D sco);
+                if (sco != null)
+                {
+                    sco.castingOption = ShadowCaster2D.ShadowCastingOptions.NoShadow;
+                }
+            }
+            
         }
         anim = false;
         carried = null;

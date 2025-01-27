@@ -30,6 +30,7 @@ public class DragAndFire : MonoBehaviour
     GameObject iDragVisuals;
     Transform iThumb;
     public CinemachineCamera cam;
+    
 
     bool prediction = false;
     bool doubleJump = false;
@@ -38,6 +39,8 @@ public class DragAndFire : MonoBehaviour
     bool teleport = false;
     bool sticky = false;
     bool longEyes = false;
+
+    Vector2 groundCheckDirection = new(0, -1);
 
     public FireflyType fireflyType;
 
@@ -53,6 +56,7 @@ public class DragAndFire : MonoBehaviour
                 rb.mass = 1;
                 upsideDown = false;
                 rb.gravityScale = 1f;
+                groundCheckDirection = new(0, -1);
                 teleport = false;
                 sticky = false;
                 
@@ -74,6 +78,7 @@ public class DragAndFire : MonoBehaviour
             case FireflyType.UpsideDown:
                 upsideDown =true;
                 rb.gravityScale = -1f;
+                groundCheckDirection = new(0, 1);
                 break;
             case FireflyType.Teleport:
                 teleport = true;
@@ -101,7 +106,8 @@ public class DragAndFire : MonoBehaviour
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0)) { 
-            holding = true;
+            if (grounded || (airial && aDoubleJumps > 0))
+                holding = true;
         }
         available = (grounded && holding) || (airial && aDoubleJumps > 0 && holding);
         if (Input.GetMouseButtonDown(0))
@@ -134,7 +140,7 @@ public class DragAndFire : MonoBehaviour
     }
     void GroundCheck()
     {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 0.3f, floorLayerMask);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, groundCheckDirection, 0.3f, floorLayerMask);
         if (hits.Length > 0)
         {
             grounded = true;
