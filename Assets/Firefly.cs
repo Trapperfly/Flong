@@ -57,4 +57,7 @@ public enum FireflyType
     Teleport,
     Sticky,
     LongEyes,
+    Flappy,
+    Spicy,
+    Round,
 }

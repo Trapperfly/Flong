@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 684498573216650562}
   - component: {fileID: 2245176470424014771}
   m_Layer: 8
-  m_Name: FF_Prediction
+  m_Name: FF_Flappy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7682aaeed61dff345838c6ac0e9104ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireflyType: 1
+  fireflyType: 8
   colors:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.9339623, g: 0.79977906, b: 0.2599235, a: 1}

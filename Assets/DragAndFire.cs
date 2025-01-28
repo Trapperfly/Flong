@@ -30,6 +30,8 @@ public class DragAndFire : MonoBehaviour
     GameObject iDragVisuals;
     Transform iThumb;
     public CinemachineCamera cam;
+    public Sprite sqSprite;
+    public Sprite ciSprite;
     
 
     bool prediction = false;
@@ -39,6 +41,7 @@ public class DragAndFire : MonoBehaviour
     bool teleport = false;
     bool sticky = false;
     bool longEyes = false;
+    bool fireball = false;
 
     Vector2 groundCheckDirection = new(0, -1);
 
@@ -59,9 +62,12 @@ public class DragAndFire : MonoBehaviour
                 groundCheckDirection = new(0, -1);
                 teleport = false;
                 sticky = false;
-                
+
                 longEyes = false;
                 tracker.adjust = 0.1f;
+                GetComponent<CircleCollider2D>().enabled = false;
+                GetComponent<BoxCollider2D>().enabled = true;
+                GetComponent<SpriteRenderer>().sprite = sqSprite;
                 break;
             case FireflyType.Prediction:
                 prediction = true;
@@ -76,7 +82,7 @@ public class DragAndFire : MonoBehaviour
                 rb.gravityScale = 2;
                 break;
             case FireflyType.UpsideDown:
-                upsideDown =true;
+                upsideDown = true;
                 rb.gravityScale = -1f;
                 groundCheckDirection = new(0, 1);
                 break;
@@ -88,6 +94,15 @@ public class DragAndFire : MonoBehaviour
                 break;
             case FireflyType.LongEyes:
                 tracker.adjust = 0.5f;
+                break;
+            case FireflyType.Flappy:
+                break;
+            case FireflyType.Spicy:
+                break;
+            case FireflyType.Round:
+                GetComponent<CircleCollider2D>().enabled = true;
+                GetComponent<BoxCollider2D>().enabled = false;
+                GetComponent<SpriteRenderer>().sprite = ciSprite;
                 break;
             default:
                 break;
@@ -125,6 +140,7 @@ public class DragAndFire : MonoBehaviour
         if ( available && Input.GetMouseButtonUp(0) ) 
         {
             if (teleport) Teleport();
+            else if (fireball) Fireball();
             else Launch();
             if (airial) { aDoubleJumps--; }
             holding = false;
@@ -221,6 +237,10 @@ public class DragAndFire : MonoBehaviour
             Vector2 posWithGrav = pos - new Vector2(0, i * i * (tracePointDistance * tracePointDistance * 4.9175f));
             lr.SetPosition(i, posWithGrav);
         }
+    }
+    void Fireball()
+    {
+
     }
     void Teleport()
     {
