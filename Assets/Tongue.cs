@@ -96,6 +96,7 @@ public class Tongue : MonoBehaviour
             {
                 dnf.fireflyType = FireflyType.None;
                 dnf.ActivateEffect(dnf.fireflyType);
+                firefly.GetComponent<SpriteRenderer>().enabled = true;
             }
             
             placing = null;
@@ -138,6 +139,7 @@ public class Tongue : MonoBehaviour
             carried.TryGetComponent(out Firefly firefly);
             if (firefly != null)
             {
+                firefly.GetComponent<SpriteRenderer>().enabled = false;
                 dnf.fireflyType = firefly.fireflyType;
                 dnf.ActivateEffect(dnf.fireflyType);
             }

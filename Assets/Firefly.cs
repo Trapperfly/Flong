@@ -31,7 +31,7 @@ public class Firefly : MonoBehaviour
     void Update()
     {
         value = Mathf.PerlinNoise1D(i);
-        material.SetVector("_Pos", new Vector2(Mathf.PerlinNoise1D(i) * 0.5f, Mathf.PerlinNoise1D(j) * 0.5f));
+        material.SetVector("_Pos", new Vector2(Mathf.PerlinNoise1D(i) - 0.5f, Mathf.PerlinNoise1D(j) - 0.5f) * 0.5f);
         l.color = CurveColor(value);
         i += Time.deltaTime * time;
         j += Time.deltaTime * time;
