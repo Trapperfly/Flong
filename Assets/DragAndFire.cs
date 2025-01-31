@@ -32,6 +32,8 @@ public class DragAndFire : MonoBehaviour
     public CinemachineCamera cam;
     public Sprite sqSprite;
     public Sprite ciSprite;
+
+    public GameObject fireballPrefab;
     
 
     bool prediction = false;
@@ -68,6 +70,8 @@ public class DragAndFire : MonoBehaviour
                 GetComponent<CircleCollider2D>().enabled = false;
                 GetComponent<BoxCollider2D>().enabled = true;
                 GetComponent<SpriteRenderer>().sprite = sqSprite;
+
+                fireball = false;
                 break;
             case FireflyType.Prediction:
                 prediction = true;
@@ -98,6 +102,7 @@ public class DragAndFire : MonoBehaviour
             case FireflyType.Flappy:
                 break;
             case FireflyType.Spicy:
+                fireball = true;
                 break;
             case FireflyType.Round:
                 GetComponent<CircleCollider2D>().enabled = true;
@@ -121,10 +126,10 @@ public class DragAndFire : MonoBehaviour
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0)) { 
-            if (grounded || (airial && aDoubleJumps > 0))
+            if ((grounded || fireball) || (airial && aDoubleJumps > 0))
                 holding = true;
         }
-        available = (grounded && holding) || (airial && aDoubleJumps > 0 && holding);
+        available = ((grounded || fireball) && holding) || (airial && aDoubleJumps > 0 && holding);
         if (Input.GetMouseButtonDown(0))
         {
             if (available)
@@ -225,7 +230,7 @@ public class DragAndFire : MonoBehaviour
         force = Vector2.Distance(mousePos, clickPos);
         direction = -(mousePos - clickPos).normalized;
         iThumb.position = new Vector3(worldMousePos.x, worldMousePos.y, 0);
-        cam.Lens.OrthographicSize = Mathf.Lerp(5, 10, force / maxForce);
+        if (!fireball) cam.Lens.OrthographicSize = Mathf.Lerp(5, 10, force / maxForce);
     }
     void CalculateTrajectory()
     {
@@ -240,7 +245,10 @@ public class DragAndFire : MonoBehaviour
     }
     void Fireball()
     {
-
+        Rigidbody2D frb = Instantiate(fireballPrefab, transform.position, Quaternion.identity, null).GetComponent<Rigidbody2D>();
+        frb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);
+        tracker.locked = false;
+        Destroy(iDragVisuals);
     }
     void Teleport()
     {
