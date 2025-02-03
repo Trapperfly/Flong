@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -49,6 +50,14 @@ public class DragAndFire : MonoBehaviour
     bool sticky = false;
     bool longEyes = false;
     bool fireball = false;
+    bool flappy = false;
+    bool phase = false;
+
+    public float phaseTime;
+    public bool phaseAvailable;
+    bool phasing;
+    public LayerMask phasingLayerMask;
+    public LayerMask normalLayerMask;
 
     Vector2 groundCheckDirection = new(0, -1);
 
@@ -77,6 +86,10 @@ public class DragAndFire : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = sqSprite;
 
                 fireball = false;
+
+                flappy = false;
+
+                phase = false;
                 break;
             case FireflyType.Prediction:
                 prediction = true;
@@ -105,6 +118,7 @@ public class DragAndFire : MonoBehaviour
                 tracker.adjust = 0.5f;
                 break;
             case FireflyType.Flappy:
+                flappy = true;
                 break;
             case FireflyType.Spicy:
                 fireball = true;
@@ -113,6 +127,9 @@ public class DragAndFire : MonoBehaviour
                 GetComponent<CircleCollider2D>().enabled = true;
                 GetComponent<BoxCollider2D>().enabled = false;
                 GetComponent<SpriteRenderer>().sprite = ciSprite;
+                break;
+            case FireflyType.Phase:
+                phase = true;
                 break;
             default:
                 break;
@@ -133,7 +150,9 @@ public class DragAndFire : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             if ((grounded || fireball) || (airial && aDoubleJumps > 0))
                 holding = true;
-            else if (flapTimer > flapCooldown) Flap();
+            else if (flappy && flapTimer > flapCooldown) Flap();
+            else if (phase && phaseAvailable)
+                StartCoroutine(Phase());
         }
         available = ((grounded || fireball) && holding) || (airial && aDoubleJumps > 0 && holding);
         if (Input.GetMouseButtonDown(0))
@@ -161,14 +180,20 @@ public class DragAndFire : MonoBehaviour
             holding = false;
             //hitPlayer = false;
         }
-        GroundCheck();
+        if (!phasing)
+            GroundCheck();
         //grounded = false;
         if (!holding) { cam.Lens.OrthographicSize = Mathf.Lerp(cam.Lens.OrthographicSize, 5, 0.02f); }
 
         flapTimer += Time.deltaTime;
         if (transform.position.y > highestPoint)
             highestPoint = transform.position.y;
-        if (grounded) highestPoint = transform.position.y;
+        if (grounded) 
+        {
+            highestPoint = transform.position.y;
+            phaseAvailable = true;
+        }
+
     }
     void GroundCheck()
     {
@@ -287,8 +312,25 @@ public class DragAndFire : MonoBehaviour
     void Flap()
     {
         rb.linearVelocityY = 0;
-        rb.AddForce(Vector2.up * flapForce * Mathf.Lerp(0,1,Vector2.Distance(new Vector2(transform.position.x, highestPoint), transform.position) / 5), ForceMode2D.Impulse);
+        rb.AddForce(flapForce * Mathf.Lerp(0, 1, Vector2.Distance(new Vector2(transform.position.x, highestPoint), transform.position) / 5) * Vector2.up, ForceMode2D.Impulse);
         flapTimer = 0;
+    }
+
+    IEnumerator Phase()
+    {
+        BoxCollider2D _bc = GetComponent<BoxCollider2D>();
+        SpriteRenderer _sr = GetComponent<SpriteRenderer>();
+        phaseAvailable = false;
+        phasing = true;
+        _sr.color = new Color(_sr.color.r, _sr.color.g, _sr.color.b, 0.3f);
+        //_bc.enabled = false;
+        Physics2D.SetLayerCollisionMask(6, phasingLayerMask); //Player layer
+        yield return new WaitForSeconds(phaseTime);
+        Physics2D.SetLayerCollisionMask(6, normalLayerMask); //Player layer
+        //_bc.enabled = true;
+        _sr.color = new Color(_sr.color.r, _sr.color.g, _sr.color.b, 1f);
+        phasing = false;
+        yield return null;
     }
 }
 //0.05 -> 0.25

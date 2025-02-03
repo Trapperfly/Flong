@@ -60,4 +60,5 @@ public enum FireflyType
     Flappy,
     Spicy,
     Round,
+    Phase,
 }
