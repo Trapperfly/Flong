@@ -61,4 +61,5 @@ public enum FireflyType
     Spicy,
     Round,
     Phase,
+    Shatter,
 }

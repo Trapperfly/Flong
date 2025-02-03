@@ -52,12 +52,15 @@ public class DragAndFire : MonoBehaviour
     bool fireball = false;
     bool flappy = false;
     bool phase = false;
+    bool shatter = false;
 
     public float phaseTime;
     public bool phaseAvailable;
     bool phasing;
     public LayerMask phasingLayerMask;
     public LayerMask normalLayerMask;
+
+    Transform shatterPieces;
 
     Vector2 groundCheckDirection = new(0, -1);
 
@@ -130,6 +133,9 @@ public class DragAndFire : MonoBehaviour
                 break;
             case FireflyType.Phase:
                 phase = true;
+                break;
+            case FireflyType.Shatter:
+                shatter = true;
                 break;
             default:
                 break;
@@ -298,12 +304,22 @@ public class DragAndFire : MonoBehaviour
         tracker.locked = false;
         Destroy(iDragVisuals);
     }
+
     void Launch()
     {
         if (sticky) rb.gravityScale = 1;
         lr.enabled = false;
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);
+        if (!shatter) rb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);
+        //else
+        //{
+        //    shatterPieces.position = transform.position;
+        //    foreach(var piece in shatterPieces)
+        //    {
+        //        Rigidbody2D sprb = GetComponent<Rigidbody2D>();
+        //        sprb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);
+        //    }
+        //}
         grounded = false;
         tracker.locked = false;
         Destroy(iDragVisuals);
