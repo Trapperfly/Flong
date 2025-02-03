@@ -34,6 +34,11 @@ public class DragAndFire : MonoBehaviour
     public Sprite ciSprite;
 
     public GameObject fireballPrefab;
+
+    public float flapForce;
+    public float flapCooldown;
+    float flapTimer = 0;
+    float highestPoint;
     
 
     bool prediction = false;
@@ -125,9 +130,10 @@ public class DragAndFire : MonoBehaviour
     {
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetMouseButtonDown(0)) { 
+        if (Input.GetMouseButtonDown(0)) {
             if ((grounded || fireball) || (airial && aDoubleJumps > 0))
                 holding = true;
+            else if (flapTimer > flapCooldown) Flap();
         }
         available = ((grounded || fireball) && holding) || (airial && aDoubleJumps > 0 && holding);
         if (Input.GetMouseButtonDown(0))
@@ -158,6 +164,11 @@ public class DragAndFire : MonoBehaviour
         GroundCheck();
         //grounded = false;
         if (!holding) { cam.Lens.OrthographicSize = Mathf.Lerp(cam.Lens.OrthographicSize, 5, 0.02f); }
+
+        flapTimer += Time.deltaTime;
+        if (transform.position.y > highestPoint)
+            highestPoint = transform.position.y;
+        if (grounded) highestPoint = transform.position.y;
     }
     void GroundCheck()
     {
@@ -271,6 +282,13 @@ public class DragAndFire : MonoBehaviour
         grounded = false;
         tracker.locked = false;
         Destroy(iDragVisuals);
+    }
+
+    void Flap()
+    {
+        rb.linearVelocityY = 0;
+        rb.AddForce(Vector2.up * flapForce * Mathf.Lerp(0,1,Vector2.Distance(new Vector2(transform.position.x, highestPoint), transform.position) / 5), ForceMode2D.Impulse);
+        flapTimer = 0;
     }
 }
 //0.05 -> 0.25
