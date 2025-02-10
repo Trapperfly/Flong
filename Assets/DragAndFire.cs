@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -59,6 +60,9 @@ public class DragAndFire : MonoBehaviour
     bool phasing;
     public LayerMask phasingLayerMask;
     public LayerMask normalLayerMask;
+
+    public Canvas canvas;
+    public GameObject UIText;
 
     Transform shatterPieces;
 
@@ -140,6 +144,13 @@ public class DragAndFire : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SpawnText(Color color, FireflyType type)
+    {
+        TMP_Text text = Instantiate(UIText, transform.position, Quaternion.identity, canvas.transform).GetComponent<TMP_Text>();
+        text.color = color;
+        text.text = type.ToString();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

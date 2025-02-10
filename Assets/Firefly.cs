@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -16,9 +17,11 @@ public class Firefly : MonoBehaviour
     Light2D l;
     float value;
     Material material;
+    public FireflyRespawnPoint respawnPoint;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        StartCoroutine(Spawn());
         material = GetComponent<SpriteRenderer>().material;
         i += Random.Range(-5000, 5000);
         j += Random.Range(-5000, 5000);
@@ -44,6 +47,62 @@ public class Firefly : MonoBehaviour
     Color CurveColor(float value)
     {
         return Color.Lerp(color1, color2, curve.Evaluate(value));
+    }
+
+    public void Picked()
+    {
+        if (respawnPoint != null)
+        {
+            StartCoroutine(respawnPoint.Picked());
+            respawnPoint = null;
+        }
+    }
+
+    IEnumerator Spawn()
+    {
+        float timer = 0;
+        Vector3 scale = transform.localScale;
+        transform.localScale = Vector3.zero;
+
+        TryGetComponent(out Light2D light);
+        float intensity = light.intensity;
+        light.intensity = 0;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(Vector3.zero, scale, timer);
+            light.intensity = Mathf.Lerp(0, intensity, timer);
+            yield return null;
+
+            if (timer >= 1) 
+            {
+                light.intensity = intensity;
+                transform.localScale = scale; 
+                break;
+            }
+        }
+    }
+
+    public IEnumerator Die()
+    {
+        float timer = 0;
+        Vector3 scale = transform.localScale;
+
+        TryGetComponent(out Light2D light);
+        float intensity = light.intensity;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(scale, Vector3.zero, timer);
+            light.intensity = Mathf.Lerp(intensity, 0, timer);
+            yield return null;
+
+            if (timer > 1)
+            {
+                break; 
+            }
+        }
+        Destroy(gameObject);
     }
 }
 

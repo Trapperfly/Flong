@@ -33,14 +33,17 @@ public class Tongue : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance, LayerMask);
             if (hit)
             {
-                
-                if (hit.transform.gameObject.layer != 7) // floor
+
+                if (hit.transform.gameObject.layer == 7 || hit.transform.gameObject.layer == 10)// floor 
+                {
+                    hitPoint = hit.point;
+                }
+                else
                 {
                     carried = hit.transform;
                     hitPoint = hit.transform.position;
+
                 }
-                else
-                  hitPoint = hit.point;
             }
             else
             {
@@ -142,6 +145,8 @@ public class Tongue : MonoBehaviour
                 firefly.GetComponent<SpriteRenderer>().enabled = false;
                 dnf.fireflyType = firefly.fireflyType;
                 dnf.ActivateEffect(dnf.fireflyType);
+                dnf.SpawnText(firefly.colors[(int)firefly.fireflyType], firefly.fireflyType);
+                firefly.Picked();
             }
             carried.TryGetComponent(out Rigidbody2D rb);
             if (rb != null)
