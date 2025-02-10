@@ -60,6 +60,7 @@ public class Firefly : MonoBehaviour
 
     IEnumerator Spawn()
     {
+        GetComponent<Collider2D>().enabled = false;
         float timer = 0;
         Vector3 scale = transform.localScale;
         transform.localScale = Vector3.zero;
@@ -81,10 +82,12 @@ public class Firefly : MonoBehaviour
                 break;
             }
         }
+        GetComponent<Collider2D>().enabled = true;
     }
 
     public IEnumerator Die()
     {
+        GetComponent<Collider2D>().enabled = false;
         float timer = 0;
         Vector3 scale = transform.localScale;
 
