@@ -42,7 +42,7 @@ Material:
     m_Colors:
     - _CaveColor: {r: 0.8113207, g: 0.8113207, b: 0.8113207, a: 1}
     - _MossColor: {r: 0, g: 1, b: 0.37373728, a: 1}
-    - _Offset: {r: 0, g: -9, b: 0, a: 0}
+    - _Offset: {r: 0, g: 10.41, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6772319696780804104
