@@ -14,6 +14,7 @@ public class CameraTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DragAndFire.instance.disabled) return;
         if (locked) return;
         transform.position = Vector2.Lerp((Vector2)player.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), adjust);
     }

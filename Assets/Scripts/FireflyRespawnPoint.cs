@@ -6,8 +6,13 @@ public class FireflyRespawnPoint : MonoBehaviour
     public GameObject fireflyPrefab;
     GameObject connectedFirefly;
     GameObject newConnectedFirefly;
+    public bool delayed = false;
 
     private void Start()
+    {
+        if (!delayed) CustomStart();
+    }
+    public void CustomStart()
     {
         newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
         newConnectedFirefly.TryGetComponent(out Firefly firefly);

@@ -59,7 +59,7 @@ public class Breakable : MonoBehaviour
         {
             rb.simulated = true;
             rb.AddForce((rb.transform.position - col.transform.position).normalized * (breakforce / Vector2.Distance(rb.transform.position, col.transform.position)), ForceMode2D.Impulse);
-            rb.transform.parent = null;
+            rb.transform.parent = Creator.instance.debrisParent;
         }
         Destroy(parent.gameObject);
     }

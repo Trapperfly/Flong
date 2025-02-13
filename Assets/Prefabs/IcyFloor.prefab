@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 792255417336617858}
   - component: {fileID: 4474272805562412265}
   - component: {fileID: 5511610981409097914}
-  m_Layer: 7
-  m_Name: Floor
+  m_Layer: 10
+  m_Name: IcyFloor
   m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2965c4e1dbd8c8c4ca58cc3a4227e255, type: 2}
+  - {fileID: 2100000, guid: 7e3362e3c6db8624284a070346aafae3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,7 +99,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2f858b2adc1f0ca459040448d798eab7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

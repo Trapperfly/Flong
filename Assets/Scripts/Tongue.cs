@@ -26,6 +26,7 @@ public class Tongue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DragAndFire.instance.disabled) return;
         if (!anim && Input.GetMouseButtonDown(1))
         {
             Vector2 direction = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;

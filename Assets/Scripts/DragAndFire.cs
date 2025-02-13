@@ -7,6 +7,22 @@ using UnityEngine;
 
 public class DragAndFire : MonoBehaviour
 {
+    #region Singleton
+    public static DragAndFire instance;
+    private void Awake()
+    {
+        // If there is an instance, and it's not me, delete myself.
+
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+    #endregion
     Rigidbody2D rb;
     LineRenderer lr;
     Vector2 clickPos;
@@ -69,6 +85,8 @@ public class DragAndFire : MonoBehaviour
     Vector2 groundCheckDirection = new(0, -1);
 
     public FireflyType fireflyType;
+
+    public bool disabled;
 
     public void ActivateEffect(FireflyType type)
     {
@@ -157,11 +175,17 @@ public class DragAndFire : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
+
+        if (disabled) 
+        {
+            Disable();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (disabled) return;
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0)) {
@@ -211,6 +235,25 @@ public class DragAndFire : MonoBehaviour
             phaseAvailable = true;
         }
 
+    }
+
+    public void Enable()
+    {
+        Debug.Log("Enabled");
+        disabled = false;
+        rb.simulated = true;
+        //GetComponent<SpriteRenderer>().enabled = true;
+    }
+    public void Disable()
+    {
+        Debug.Log("Disabled");
+        disabled = true;
+        //GetComponent<SpriteRenderer>().enabled = false;
+        rb.simulated = false;
+        rb.angularVelocity = 0;
+        rb.linearVelocity = new Vector2 (0, 0);
+        transform.eulerAngles = new Vector3 (0, 0, 0);
+        transform.position = Vector3.zero;
     }
     void GroundCheck()
     {

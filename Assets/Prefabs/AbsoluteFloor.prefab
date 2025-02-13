@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 792255417336617858}
   - component: {fileID: 4474272805562412265}
   - component: {fileID: 5511610981409097914}
-  m_Layer: 7
-  m_Name: Floor
+  m_Layer: 10
+  m_Name: AbsoluteFloor
   m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
