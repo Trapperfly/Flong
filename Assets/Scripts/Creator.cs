@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,7 +25,15 @@ public class Creator : MonoBehaviour
 
 
     public CreateFloor createFloor;
+    public Tools tool;
     public bool floorCreatingEnabled;
+    public bool toolingEnabled;
+    public bool moving;
+    public bool rotating;
+    public bool scaling;
+    public bool deleting;
+
+    public LayerMask objectAlteringMask;
 
     public List<GameObject> dragObjects = new();
 
@@ -40,6 +49,8 @@ public class Creator : MonoBehaviour
     public Transform debrisParent;
 
     public bool hovering;
+
+    public CinemachineCamera cam;
 
     public class SavedInfo
     {
@@ -59,36 +70,61 @@ public class Creator : MonoBehaviour
     public List <SavedInfo> data = new();
     public List <SavedInfo> savedData = new();
 
-    int i = 0;
+    public List<SavedInfo> toBeRemoved = new();
+
+    int floor = 0;
+    public void ChangeFlooring(CreateFloor floorType)
+    {
+        switch (floorType)
+        {
+            case CreateFloor.Floor:
+                floor = 0;
+                break;
+            case CreateFloor.AbsoluteFloor:
+                floor = 1;
+                break;
+            case CreateFloor.FragileFloor:
+                floor = 2;
+                break;
+            case CreateFloor.IcyFloor:
+                floor = 3;
+                break;
+            case CreateFloor.SpikyFloor:
+                floor = 4;
+                break;
+            default:
+                break;
+        }
+    }
+    int tools = 0;
+    public void ChangeTool(Tools toolType)
+    {
+        switch (toolType)
+        {
+            case Tools.Move:
+                tools = 0;
+                break;
+            case Tools.Scale:
+                tools = 1;
+                break;
+            case Tools.Rotate:
+                tools = 2;
+                break;
+            case Tools.Delete:
+                tools = 3;
+                break;
+            default:
+                break;
+        }
+    }
     void Update()
     {
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (!hovering && floorCreatingEnabled)
         {
-            switch (createFloor)
-            {
-                case CreateFloor.Floor:
-                    i = 0;
-                    break;
-                case CreateFloor.AbsoluteFloor:
-                    i = 1;
-                    break;
-                case CreateFloor.FragileFloor:
-                    i = 2;
-                    break;
-                case CreateFloor.IcyFloor:
-                    i = 3;
-                    break;
-                case CreateFloor.SpikyFloor:
-                    i = 4;
-                    break;
-                default:
-                    break;
-            }
-
             if (Input.GetMouseButtonDown(0))
             {
-                t = Instantiate(dragObjects[i], worldMousePos, Quaternion.identity, null).transform;
+                t = Instantiate(dragObjects[floor], worldMousePos, Quaternion.identity, null).transform;
                 
                 startPos = worldMousePos;
             }
@@ -108,6 +144,31 @@ public class Creator : MonoBehaviour
             }
         }
         
+        if (!hovering && toolingEnabled)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (tools == 3)//Delete
+                {
+                    Collider2D[] hits = Physics2D.OverlapCircleAll(worldMousePos, 0.1f);
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        if (hits[i] != null)
+                        {
+                            for (int j = 0; j < savedData.Count; j++)
+                            {
+                                if (savedData[j].gameObject == hits[i].gameObject) savedData.RemoveAt(j);
+                            }
+                            hits[i].TryGetComponent(out Firefly fly);
+                            if (fly)
+                                if (fly.respawnPoint)
+                                    Destroy(fly.respawnPoint.gameObject);
+                            Destroy(hits[i].gameObject);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void ResetVisuals()
@@ -122,6 +183,10 @@ public class Creator : MonoBehaviour
     {
         foreach(var item in savedData)
         {
+            if (item.gameObject == null) {
+                toBeRemoved.Add(item);
+                return;
+            }
             GameObject saved = Instantiate(item.gameObject);
             data.Add(new SavedInfo(saved, saved.transform.position, saved.transform.localScale, saved.transform.rotation));
             item.gameObject.SetActive(false);
@@ -133,10 +198,23 @@ public class Creator : MonoBehaviour
         DragAndFire dnf = DragAndFire.instance;
         dnf.rb.angularVelocity = 0;
         dnf.rb.linearVelocity = Vector2.zero;
+
+        for (int i = 0; i < toBeRemoved.Count; i++)
+        {
+            for (int j = 0; j < savedData.Count; j++)
+            {
+                if (toBeRemoved[i] == savedData[j]) savedData.RemoveAt(j);
+            }
+        }
+        toBeRemoved.Clear();
+
+        cam.enabled = true;
     }
 
     public void Restart()
     {
+        cam.enabled = false;
+        Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         foreach(var item in savedData)
         {
             item.gameObject.SetActive(true);
