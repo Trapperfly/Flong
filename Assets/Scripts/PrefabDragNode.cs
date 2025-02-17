@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static Creator;
 
 public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -13,6 +15,11 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
     public TMPro.TMP_Dropdown dropdown;
 
     public bool bush;
+
+    private void Start()
+    {
+        if (!bush) prefab = prefabs[dropdown.value];
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -28,7 +35,11 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (bush) dragging.GetComponent<FireflyRespawnPoint>().CustomStart();
+        if (bush) { 
+            dragging.GetComponent<FireflyRespawnPoint>().CustomStart();
+            dragging.GetComponent<FireflyRespawnPoint>().delayed = false;
+        }
+        Creator.instance.savedData.Add(new SavedInfo(dragging.transform.gameObject, dragging.transform.position, dragging.transform.localScale, dragging.transform.rotation));
         dragging = null;
     }
 

@@ -33,7 +33,7 @@ public class Breakable : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player hit floor");
-            if (collision.GetComponent<DragAndFire>().fireflyType == FireflyType.Thick)
+            if (collision.GetComponent<DragAndFire>().thick)
             {
                 Debug.Log("Player was thick. Hit the collider at " + collision.GetComponent<Rigidbody2D>().linearVelocity.y + " downward force");
                 if (collision.GetComponent<Rigidbody2D>().linearVelocity.y < -neededForce)

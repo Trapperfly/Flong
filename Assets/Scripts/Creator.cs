@@ -32,6 +32,8 @@ public class Creator : MonoBehaviour
 
     public List<EnableNode> enableNodes = new();
 
+    public List<GameObject> bushFireflies = new();
+
     Transform t;
     Vector2 startPos;
 
@@ -124,6 +126,13 @@ public class Creator : MonoBehaviour
             data.Add(new SavedInfo(saved, saved.transform.position, saved.transform.localScale, saved.transform.rotation));
             item.gameObject.SetActive(false);
         }
+        foreach(var item in bushFireflies)
+        {
+            item.SetActive(false);
+        }
+        DragAndFire dnf = DragAndFire.instance;
+        dnf.rb.angularVelocity = 0;
+        dnf.rb.linearVelocity = Vector2.zero;
     }
 
     public void Restart()
@@ -131,6 +140,10 @@ public class Creator : MonoBehaviour
         foreach(var item in savedData)
         {
             item.gameObject.SetActive(true);
+        }
+        foreach (var item in bushFireflies)
+        {
+            item.SetActive(true);
         }
         DragAndFire.instance.Disable();
         ResetVisuals();
@@ -148,7 +161,14 @@ public class Creator : MonoBehaviour
         GameObject dp = Instantiate(debrisParent).gameObject;
         Destroy(debrisParent.gameObject);
         debrisParent = dp.transform;
-        
+
+        DragAndFire dnf = DragAndFire.instance;
+        dnf.fireflyType = FireflyType.None;
+        //if (dnf.transform.GetChild(1).childCount > 0)
+        //    Destroy(dnf.transform.GetChild(1).GetChild(0).gameObject);
+
+        dnf.rb.angularVelocity = 0;
+        dnf.rb.linearVelocity = Vector2.zero;
     }
 }
 public enum CreateFloor

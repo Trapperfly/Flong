@@ -10,6 +10,7 @@ public class EnableNode : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     private void Start()
     {
         image = GetComponent<Image>();
+        Creator.instance.createFloor = (CreateFloor)dropdown.value;
     }
     public void OnPointerClick(PointerEventData eventData)
     {

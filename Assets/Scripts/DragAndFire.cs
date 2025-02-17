@@ -23,7 +23,7 @@ public class DragAndFire : MonoBehaviour
         }
     }
     #endregion
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     LineRenderer lr;
     Vector2 clickPos;
     bool holding = false;
@@ -61,7 +61,7 @@ public class DragAndFire : MonoBehaviour
 
     bool prediction = false;
     bool doubleJump = false;
-    bool thick = false;
+    public bool thick = false;
     bool upsideDown = false;
     bool teleport = false;
     bool sticky = false;
@@ -190,7 +190,15 @@ public class DragAndFire : MonoBehaviour
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0)) {
             if ((grounded || fireball) || (airial && aDoubleJumps > 0))
+            {
+                if (doubleJump)
+                {
+                    rb.gravityScale = 0;
+                    rb.linearVelocity = Vector2.zero;
+                    rb.angularVelocity = 0;
+                }
                 holding = true;
+            }
             else if (flappy && flapTimer > flapCooldown) Flap();
             else if (phase && phaseAvailable)
                 StartCoroutine(Phase());
@@ -361,7 +369,7 @@ public class DragAndFire : MonoBehaviour
 
     void Launch()
     {
-        if (sticky) rb.gravityScale = 1;
+        if (sticky || doubleJump) rb.gravityScale = 1;
         lr.enabled = false;
         rb.linearVelocity = Vector2.zero;
         if (!shatter) rb.AddForce(direction * force * forceMultiplier, ForceMode2D.Impulse);

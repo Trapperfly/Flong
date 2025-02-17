@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireflyPrefab: {fileID: 0}
+  delayed: 0
 --- !u!1 &8986412005537792601
 GameObject:
   m_ObjectHideFlags: 0

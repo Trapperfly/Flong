@@ -10,13 +10,20 @@ public class FireflyRespawnPoint : MonoBehaviour
 
     private void Start()
     {
-        if (!delayed) CustomStart();
+        if (delayed) { }
+        else
+        {
+            newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
+            newConnectedFirefly.TryGetComponent(out Firefly firefly);
+            firefly.respawnPoint = this;
+        }
     }
     public void CustomStart()
     {
         newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
         newConnectedFirefly.TryGetComponent(out Firefly firefly);
         firefly.respawnPoint = this;
+        Creator.instance.bushFireflies.Add(firefly.gameObject);
     }
 
     public IEnumerator Picked()
@@ -27,5 +34,11 @@ public class FireflyRespawnPoint : MonoBehaviour
         newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
         newConnectedFirefly.TryGetComponent(out Firefly firefly);
         firefly.respawnPoint = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (connectedFirefly != null) { Destroy(connectedFirefly.gameObject); }
+        if (newConnectedFirefly != null) { Destroy(newConnectedFirefly.gameObject); }
     }
 }
