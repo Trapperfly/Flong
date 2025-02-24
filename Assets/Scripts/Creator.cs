@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Creator : MonoBehaviour
 {

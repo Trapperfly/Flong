@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 792255417336617858}
   - component: {fileID: 4474272805562412265}
   - component: {fileID: 5511610981409097914}
+  - component: {fileID: -1450498095592075015}
   m_Layer: 7
   m_Name: Floor
   m_TagString: Floor
@@ -163,9 +164,9 @@ MonoBehaviour:
   - {x: 0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_InstanceId: 0
-  m_ShadowShape2DComponent: {fileID: 792255417336617858}
+  m_ShadowShape2DComponent: {fileID: 4474272805562412265}
   m_ShadowShape2DProvider:
-    rid: 8409196232675426498
+    rid: 8409196232675426539
   m_ShadowCastingSource: 2
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
@@ -185,6 +186,18 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 8409196232675426498
-      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+    - rid: 8409196232675426539
+      type: {class: ShadowShape2DProvider_Collider2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
+--- !u!114 &-1450498095592075015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5178161738400841002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73de58ec08fc084ab23d55944a8bb6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
