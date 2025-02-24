@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 3630447807373276275}
   - component: {fileID: 7431821527944096305}
   - component: {fileID: 3505690439716455520}
-  - component: {fileID: 3505886173433576707}
   m_Layer: 7
   m_Name: LeafLeft
   m_TagString: Untagged
@@ -359,18 +358,6 @@ MonoBehaviour:
     - rid: 8409196232675426536
       type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!114 &3505886173433576707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3374422390729001969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73de58ec08fc084ab23d55944a8bb6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7125030468340905654
 GameObject:
   m_ObjectHideFlags: 0

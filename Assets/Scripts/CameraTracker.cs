@@ -18,4 +18,9 @@ public class CameraTracker : MonoBehaviour
         if (locked) return;
         transform.position = Vector2.Lerp((Vector2)player.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), adjust);
     }
+
+    public void Lock(bool lockIt)
+    {
+        locked = lockIt;
+    }
 }

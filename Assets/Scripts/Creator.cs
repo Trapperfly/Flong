@@ -207,13 +207,13 @@ public class Creator : MonoBehaviour
         }
         toBeRemoved.Clear();
 
-        cam.enabled = true;
+        //cam.enabled = true;
     }
 
     public void Restart()
     {
-        cam.enabled = false;
-        Camera.main.transform.position = new Vector3(0f, 0f, -10f);
+        //cam.enabled = false;
+        //Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         foreach(var item in savedData)
         {
             item.gameObject.SetActive(true);
