@@ -50,7 +50,7 @@ public class Creator : MonoBehaviour
     public bool hovering;
 
     public CinemachineCamera cam;
-
+    [System.Serializable]
     public class SavedInfo
     {
         public SavedInfo(GameObject prefab, Vector2 pos, Vector3 scale, Quaternion rotation)
@@ -70,6 +70,8 @@ public class Creator : MonoBehaviour
     public List <SavedInfo> savedData = new();
 
     public List<SavedInfo> toBeRemoved = new();
+
+    public TMPro.TMP_InputField input;
 
     int floor = 0;
     public void ChangeFlooring(CreateFloor floorType)
@@ -247,7 +249,30 @@ public class Creator : MonoBehaviour
         dnf.rb.angularVelocity = 0;
         dnf.rb.linearVelocity = Vector2.zero;
     }
+    public void SaveLevel()
+    {
+        LevelData levelData = new LevelData();
+
+        foreach (var obj in FindObjectsByType<SaveableObject>(FindObjectsSortMode.InstanceID))
+        {
+            ObjectData objectData = new ObjectData
+            {
+                prefabName = obj.prefabName, // Set in SaveableObject component
+                position = obj.transform.position,
+                rotation = obj.transform.rotation,
+                scale = obj.transform.localScale,
+                customData = obj.GetCustomData() // Implement custom data method in SaveableObject
+            };
+
+            levelData.objects.Add(objectData);
+        }
+
+        string json = JsonUtility.ToJson(levelData, true);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/" + input.text + ".json", json);
+        Debug.Log($"Level saved to {Application.persistentDataPath}/{input.text}.json");
+    }
 }
+
 public enum CreateFloor
 {
     Floor,

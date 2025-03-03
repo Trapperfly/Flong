@@ -14,6 +14,7 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
     public TMPro.TMP_Dropdown dropdown;
 
     public bool bush;
+    public bool lighting;
 
     private void Start()
     {
@@ -25,6 +26,7 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
         dragging = Instantiate(prefab);
         if (bush) dragging.GetComponent<FireflyRespawnPoint>().delayed = true;
         if (bush) dragging.GetComponent<FireflyRespawnPoint>().fireflyPrefab = prefabs[dropdown.value];
+        if (lighting) dragging.GetComponent<LightStart>().delayedStart = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -38,6 +40,7 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
             dragging.GetComponent<FireflyRespawnPoint>().CustomStart();
             dragging.GetComponent<FireflyRespawnPoint>().delayed = false;
         }
+        if (lighting) dragging.GetComponent<LightStart>().delayedStart = false;
         Creator.instance.savedData.Add(new SavedInfo(dragging.transform.gameObject, dragging.transform.position, dragging.transform.localScale, dragging.transform.rotation));
         dragging = null;
     }
