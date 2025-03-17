@@ -12,6 +12,7 @@ public class SaveableObject : MonoBehaviour
     }
 }
 
+
 [System.Serializable]
 public class LevelData
 {
@@ -26,4 +27,21 @@ public class ObjectData
     public Quaternion rotation;
     public Vector3 scale;
     public string customData; // For any additional data (e.g., JSON string or key-value pairs)
+}
+
+[System.Serializable]
+public class CustomDataBase
+{
+    public string type; // Stores the type of data (e.g., "EnumData", "LightData")
+}
+
+public class EnumData : CustomDataBase
+{
+    public FireflyType state;
+
+    public EnumData(FireflyType state)
+    {
+        this.type = "EnumData";
+        this.state = state;
+    }
 }
