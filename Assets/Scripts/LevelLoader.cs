@@ -9,6 +9,7 @@ public class LevelLoader : MonoBehaviour
     public Transform levelParent;
     public void OpenFileDialogAndLoad()
     {
+        Creator.instance.Clear();
         string directory = Application.persistentDataPath;
         var paths = StandaloneFileBrowser.OpenFilePanel("Load Level", directory, "json", false);
         if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))

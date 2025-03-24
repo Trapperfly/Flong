@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Unity.Cinemachine;
-using Unity.Mathematics;
-using UnityEditor.Overlays;
 using UnityEngine;
 
 public class Creator : MonoBehaviour
