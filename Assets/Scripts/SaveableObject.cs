@@ -14,6 +14,15 @@ public class SaveableObject : MonoBehaviour
     {
         // Implement in subclasses
     }
+
+    private void OnDestroy()
+    {
+        var item = new SavedInfo(gameObject, transform.position, transform.localScale, transform.rotation);
+        if (Creator.instance.savedData.Contains(item))
+        {
+            Creator.instance.savedData.Remove(item);
+        }
+    }
 }
 
 

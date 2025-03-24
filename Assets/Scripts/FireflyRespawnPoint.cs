@@ -15,14 +15,20 @@ public class FireflyRespawnPoint : MonoBehaviour
         if (delayed) { }
         else
         {
-            newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
+            if (Creator.instance.levelParent.gameObject.activeSelf)
+                newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.levelParent);
+            else
+                newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.activeLevelParent);
             newConnectedFirefly.TryGetComponent(out Firefly firefly);
             firefly.respawnPoint = this;
         }
     }
     public void CustomStart()
     {
-        newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
+        if (Creator.instance.levelParent.gameObject.activeSelf)
+            newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.levelParent);
+        else
+            newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.activeLevelParent);
         newConnectedFirefly.TryGetComponent(out Firefly firefly);
         firefly.respawnPoint = this;
         Creator.instance.bushFireflies.Add(firefly.gameObject);
@@ -33,7 +39,7 @@ public class FireflyRespawnPoint : MonoBehaviour
         if (connectedFirefly != null) { StartCoroutine(connectedFirefly.GetComponent<Firefly>().Die()); }
         connectedFirefly = newConnectedFirefly;
         yield return new WaitForSeconds(3);
-        newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, null);
+        newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.activeLevelParent);
         newConnectedFirefly.TryGetComponent(out Firefly firefly);
         firefly.respawnPoint = this;
     }

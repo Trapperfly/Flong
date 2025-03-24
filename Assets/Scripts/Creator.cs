@@ -76,6 +76,9 @@ public class Creator : MonoBehaviour
 
     public TMPro.TMP_InputField input;
 
+    public Transform levelParent;
+    public Transform activeLevelParent;
+
     int floor = 0;
     public void ChangeFlooring(CreateFloor floorType)
     {
@@ -187,13 +190,14 @@ public class Creator : MonoBehaviour
     {
         foreach(var item in savedData)
         {
-            if (item.gameObject == null) {
+            if (item.gameObject == null || item.scale.x == 0 || item.scale.y == 0) {
                 toBeRemoved.Add(item);
                 return;
             }
-            GameObject saved = Instantiate(item.gameObject);
+            if (item.gameObject.transform.parent == null) { item.gameObject.transform.parent = levelParent; }
+            GameObject saved = Instantiate(item.gameObject, activeLevelParent);
             data.Add(new SavedInfo(saved, saved.transform.position, saved.transform.localScale, saved.transform.rotation));
-            item.gameObject.SetActive(false);
+            //item.gameObject.SetActive(false);
         }
         foreach(var item in bushFireflies)
         {
@@ -246,8 +250,13 @@ public class Creator : MonoBehaviour
 
         DragAndFire dnf = DragAndFire.instance;
         dnf.fireflyType = FireflyType.None;
+        dnf.ActivateEffect(dnf.fireflyType);
+        dnf.transform.GetChild(1).GetComponent<Tongue>().Clear();
         //if (dnf.transform.GetChild(1).childCount > 0)
-        //    Destroy(dnf.transform.GetChild(1).GetChild(0).gameObject);
+        //{
+        //    dnf.transform.GetChild(1).GetChild(0).TryGetComponent(out Firefly ff);
+        //    if (ff != null) ff.Die();
+        //}
 
         dnf.rb.angularVelocity = 0;
         dnf.rb.linearVelocity = Vector2.zero;

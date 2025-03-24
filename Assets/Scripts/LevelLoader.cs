@@ -6,6 +6,7 @@ using System.IO;
 
 public class LevelLoader : MonoBehaviour
 {
+    public Transform levelParent;
     public void OpenFileDialogAndLoad()
     {
         string directory = Application.persistentDataPath;
@@ -44,7 +45,7 @@ public class LevelLoader : MonoBehaviour
             return;
         }
 
-        GameObject obj = Instantiate(prefab, objectData.position, objectData.rotation);
+        GameObject obj = Instantiate(prefab, objectData.position, objectData.rotation, levelParent);
         obj.transform.localScale = objectData.scale;
 
         SaveableObject saveable = obj.GetComponent<SaveableObject>();
@@ -59,5 +60,7 @@ public class LevelLoader : MonoBehaviour
 
             saveable.LoadCustomData(customData);
         }
+
+        Creator.instance.savedData.Add(new SavedInfo(obj, obj.transform.position, obj.transform.localScale, obj.transform.rotation));
     }
 }

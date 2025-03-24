@@ -62,10 +62,9 @@ public class DragAndFire : MonoBehaviour
     bool prediction = false;
     bool doubleJump = false;
     public bool thick = false;
-    bool upsideDown = false;
+    bool upsideDown;
     bool teleport = false;
     bool sticky = false;
-    bool longEyes = false;
     bool fireball = false;
     bool flappy = false;
     bool phase = false;
@@ -98,13 +97,10 @@ public class DragAndFire : MonoBehaviour
                 doubleJumps = 0;
                 thick = false;
                 rb.mass = 1;
-                upsideDown = false;
                 rb.gravityScale = 1f;
                 groundCheckDirection = new(0, -1);
                 teleport = false;
                 sticky = false;
-
-                longEyes = false;
                 tracker.adjust = 0.1f;
                 GetComponent<CircleCollider2D>().enabled = false;
                 GetComponent<BoxCollider2D>().enabled = true;
@@ -129,7 +125,6 @@ public class DragAndFire : MonoBehaviour
                 rb.gravityScale = 2;
                 break;
             case FireflyType.UpsideDown:
-                upsideDown = true;
                 rb.gravityScale = -1f;
                 groundCheckDirection = new(0, 1);
                 break;

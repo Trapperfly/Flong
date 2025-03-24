@@ -8,7 +8,6 @@ public class LevelSaver : MonoBehaviour
 
     public void SaveLevel()
     {
-        LevelData levelData = new();
 
         List<ObjectData> objectList = new();
 

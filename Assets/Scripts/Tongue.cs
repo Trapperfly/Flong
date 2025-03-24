@@ -23,6 +23,16 @@ public class Tongue : MonoBehaviour
         lr = GetComponent<LineRenderer>();
     }
 
+    public void Clear()
+    {
+        if (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+        }
+        carried = null;
+        placing = null;
+    }
+
     // Update is called once per frame
     void Update()
     {
