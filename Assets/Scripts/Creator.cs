@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using Unity.Mathematics;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public class Creator : MonoBehaviour
@@ -50,6 +51,8 @@ public class Creator : MonoBehaviour
     public bool hovering;
 
     public CinemachineCamera cam;
+
+    public GameObject[] fireflyPrefabs;
     [System.Serializable]
     public class SavedInfo
     {
@@ -249,29 +252,32 @@ public class Creator : MonoBehaviour
         dnf.rb.angularVelocity = 0;
         dnf.rb.linearVelocity = Vector2.zero;
     }
-    public void SaveLevel()
+    public void Clear()
     {
-        LevelData levelData = new LevelData();
+        foreach (var item in savedData)
+        {
+            Destroy(item.gameObject);
+        }
+        savedData.Clear();
+        foreach (var item in bushFireflies)
+        {
+            Destroy(item);
+        }
+        bushFireflies.Clear();
+        for (int i = 0; i < data.Count; i++)
+        {
+            if (data[i] == null || data[i].gameObject == null) return;
+            Destroy(data[i].gameObject);
+        }
+        data.Clear();
 
         foreach (var obj in FindObjectsByType<SaveableObject>(FindObjectsSortMode.InstanceID))
         {
-            ObjectData objectData = new ObjectData
-            {
-                prefabName = obj.prefabName, // Set in SaveableObject component
-                position = obj.transform.position,
-                rotation = obj.transform.rotation,
-                scale = obj.transform.localScale,
-                customData = obj.GetCustomData() // Implement custom data method in SaveableObject
-            };
-
-            levelData.objects.Add(objectData);
+            Destroy(obj.gameObject);
         }
-
-        string json = JsonUtility.ToJson(levelData, true);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/" + input.text + ".json", json);
-        Debug.Log($"Level saved to {Application.persistentDataPath}/{input.text}.json");
     }
 }
+
 
 public enum CreateFloor
 {

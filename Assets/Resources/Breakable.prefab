@@ -381,6 +381,7 @@ GameObject:
   - component: {fileID: 246258230809919499}
   - component: {fileID: 211909019993689917}
   - component: {fileID: 5892453841992749287}
+  - component: {fileID: -494999977885697951}
   m_Layer: 7
   m_Name: Breakable
   m_TagString: Floor
@@ -569,6 +570,19 @@ MonoBehaviour:
     - rid: 8409196232675426498
       type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
+--- !u!114 &-494999977885697951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5476493240011917536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1307f8ae8a79c84cb8296634ccfd4c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: Breakable
 --- !u!1 &6536189391445036442
 GameObject:
   m_ObjectHideFlags: 0

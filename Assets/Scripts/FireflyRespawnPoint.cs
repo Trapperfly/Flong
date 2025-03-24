@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FireflyRespawnPoint : MonoBehaviour
 {
+    public FireflyType type;
     public GameObject fireflyPrefab;
     GameObject connectedFirefly;
     GameObject newConnectedFirefly;
@@ -10,6 +11,7 @@ public class FireflyRespawnPoint : MonoBehaviour
 
     private void Start()
     {
+        fireflyPrefab = Creator.instance.fireflyPrefabs[(int)type];
         if (delayed) { }
         else
         {
