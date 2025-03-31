@@ -11,10 +11,17 @@ public class FireflyRespawnPoint : MonoBehaviour
 
     private void Start()
     {
-        fireflyPrefab = Creator.instance.fireflyPrefabs[(int)type];
+        string name = "Fireflies/FF_";
+        name += type;
+        Debug.Log(name);
+        fireflyPrefab = Resources.Load<GameObject>(name);
+        if (fireflyPrefab == null) { Debug.Log("Not found"); }
+        //fireflyPrefab = Creator.instance.fireflyPrefabs[(int)type];
         if (delayed) { }
         else
         {
+            
+            Resources.Load<GameObject>("");
             if (Creator.instance.levelParent.gameObject.activeSelf)
                 newConnectedFirefly = Instantiate(fireflyPrefab, transform.position, Quaternion.identity, Creator.instance.levelParent);
             else

@@ -184,6 +184,12 @@ public class DragAndFire : MonoBehaviour
         mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0)) {
+            //if (holding && !grounded && !(fireball || ) && airial && iDragVisuals != null)
+            //    Destroy(iDragVisuals);
+            //else
+            //{
+
+            //}
             if ((grounded || fireball) || (airial && aDoubleJumps > 0))
             {
                 if (doubleJump)
@@ -210,6 +216,13 @@ public class DragAndFire : MonoBehaviour
             Drag();
             if (force > maxForce * 0.1f) force = maxForce * 0.1f;
             CalculateTrajectory();
+        }
+        else if (iDragVisuals != null && iThumb != null)
+        {
+            holding = false;
+            lr.enabled = false;
+            Destroy(iDragVisuals);
+            Destroy(iThumb);
         }
         if ( available && Input.GetMouseButtonUp(0) ) 
         {

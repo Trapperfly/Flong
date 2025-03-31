@@ -24,10 +24,10 @@ public class PrefabDragNode : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragging = Instantiate(prefab);
-        if (bush) dragging.GetComponent<FireflyRespawnPoint>().delayed = true;
         if (bush)
         {
-            dragging.GetComponent<FireflyRespawnPoint>().type = (FireflyType)dropdown.value;
+                dragging.GetComponent<FireflyRespawnPoint>().delayed = true;
+                dragging.GetComponent<FireflyRespawnPoint>().type = (FireflyType)dropdown.value;
         }
         if (lighting) dragging.GetComponent<LightStart>().delayedStart = true;
     }
