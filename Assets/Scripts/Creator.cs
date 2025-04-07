@@ -21,6 +21,10 @@ public class Creator : MonoBehaviour
     }
     #endregion
 
+    List<Transform> toBeTooled = new();
+    GameObject gizmo;
+    public Canvas canvas;
+    public List<GameObject> gizmos;
 
     public CreateFloor createFloor;
     public Tools tool;
@@ -153,27 +157,68 @@ public class Creator : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (tools == 3)//Delete
+                Collider2D[] hits = Physics2D.OverlapCircleAll(worldMousePos, 0.1f);
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    Collider2D[] hits = Physics2D.OverlapCircleAll(worldMousePos, 0.1f);
-                    for (int i = 0; i < hits.Length; i++)
+                    if (hits[i] != null)
                     {
-                        if (hits[i] != null)
+                        switch (tools)
                         {
-                            for (int j = 0; j < savedData.Count; j++)
-                            {
-                                if (savedData[j].gameObject == hits[i].gameObject) savedData.RemoveAt(j);
-                            }
-                            hits[i].TryGetComponent(out Firefly fly);
-                            if (fly)
-                                if (fly.respawnPoint)
-                                    Destroy(fly.respawnPoint.gameObject);
-                            Destroy(hits[i].gameObject);
+                            case 0: //Move
+                            case 1: //Scale
+                            case 2: //Rotate
+                                if (!Input.GetKey(KeyCode.LeftShift))
+                                    toBeTooled.Clear();
+
+                                toBeTooled.Add(hits[i].transform);
+
+                                Tooling(tools);
+                                break;
+                            case 3: //Delete
+                                for (int j = 0; j < savedData.Count; j++)
+                                {
+                                    if (savedData[j].gameObject == hits[i].gameObject) savedData.RemoveAt(j);
+                                }
+                                hits[i].TryGetComponent(out Firefly fly);
+                                if (fly)
+                                    if (fly.respawnPoint)
+                                        Destroy(fly.respawnPoint.gameObject);
+                                Destroy(hits[i].gameObject);
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
             }
         }
+    }
+
+    void Tooling(int tool)
+    {
+        if (gizmo != null)
+            Destroy(gizmo);
+        Vector2 pos;
+        if (toBeRemoved.Count > 1)
+        {
+            float avgX = 0;
+            float avgY = 0;
+            foreach (var t in toBeTooled)
+            {
+                avgX += t.transform.position.x;
+                avgY += t.transform.position.y;
+            }
+            avgX /= toBeTooled.Count;
+            avgY /= toBeTooled.Count;
+            pos = new(avgX, avgY);
+        }
+        else
+        {
+            pos = toBeTooled[0].position;
+        }
+        gizmo = Instantiate(gizmos[tool], pos, Quaternion.identity, canvas.transform);
+        foreach (Transform child in gizmo.transform)
+            child.gameObject.GetComponent<Gizmos>().targets = toBeTooled;
     }
 
     public void ResetVisuals()
